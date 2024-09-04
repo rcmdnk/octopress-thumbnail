@@ -95,7 +95,7 @@ module Jekyll
           end
         end
         local_file = self.get_local(vals['src'], site)
-        if File.extname(local_file) != '.gif' and File.exist?(local_file)
+        if !vals['src'].start_with?('http') and File.extname(local_file) != '.gif' and File.exist?(local_file)
           thumbnail = File.dirname(vals['src']) + '/thumbnail/' + File.basename(vals['src'], '.*') + '_' + vals['width'] + '_' + vals['height'] + File.extname(vals['src'])
           thumbnail_local = self.get_local(thumbnail, site)
           if not File.exist?(thumbnail_local)
@@ -117,9 +117,6 @@ module Jekyll
           vals['src'] = thumbnail
           vals['alt'] = File.basename(thumbnail, '.*')
         else
-          if File.extname(local_file) != '.gif'
-            p "#{local_file} is not found."
-          end
           vals['alt'] = File.basename(vals['src'], '.*')
         end
         "<img #{vals.collect {|k,v| "#{k}=\"#{v}\"" if v}.join(" ")}>"
